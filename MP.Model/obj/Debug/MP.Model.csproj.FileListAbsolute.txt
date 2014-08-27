@@ -1,0 +1,5 @@
+C:\Users\Troy\Documents\GitHub\MP\MP.Model\bin\Debug\MP.Model.dll
+C:\Users\Troy\Documents\GitHub\MP\MP.Model\bin\Debug\MP.Model.pdb
+C:\Users\Troy\Documents\GitHub\MP\MP.Model\obj\Debug\MP.Model.csprojResolveAssemblyReference.cache
+C:\Users\Troy\Documents\GitHub\MP\MP.Model\obj\Debug\MP.Model.dll
+C:\Users\Troy\Documents\GitHub\MP\MP.Model\obj\Debug\MP.Model.pdb
