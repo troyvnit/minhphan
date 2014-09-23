@@ -9,5 +9,7 @@
         public string ReceiverName { get; set; }
         public string ReceiverPhone { get; set; }
         public string DeliveryAddress { get; set; }
+        public decimal Fee { get; set; }
+        public bool Payed { get; set; }
     }
 }
