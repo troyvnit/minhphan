@@ -95,3 +95,6 @@ input[type="checkbox"].input-validation-error {
     left: 50%;
     margin: -28px 0 0 -25px;
 }
+.full-width {
+    width: 100%;
+}

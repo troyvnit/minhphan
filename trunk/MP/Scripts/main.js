@@ -263,7 +263,8 @@ $(document).ready(function () {
                         toTime: $("#toTime").val(),
                         TripName: $("#TripName").val(),
                         skip: options.skip,
-                        take: options.take
+                        take: options.take,
+                        filter: options.filter ? kendo.stringify(options.filter.filters) : ""
                     };
                 }
             }
@@ -271,6 +272,7 @@ $(document).ready(function () {
         batch: true,
         pageSize: 10,
         serverPaging: true,
+        serverFiltering: true,
         schema: {
             model: {
                 id: "Id",
@@ -285,7 +287,9 @@ $(document).ready(function () {
                     DeliveryAddress: { type: "string" },
                     Note: { type: "string" },
                     TripDepartureDate: { type: "date", format: "dd/MM/yyyy" },
-                    TripDepartureTime: { type: "string" }
+                    TripDepartureTime: { type: "string" },
+                    Fee: { type: "number" },
+                    Payed: { type: "boolean" }
                 }
             },
             total: "total",
@@ -297,6 +301,31 @@ $(document).ready(function () {
         dataSource: itemDataSource,
         navigatable: true,
         pageable: true,
+        filterable: {
+            extra: false,
+            messages: {
+                info: "Lọc theo tiêu chí:", 
+                filter: "Lọc",
+                clear: "Xóa", 
+
+                isTrue: "Rồi", 
+                isFalse: "Chưa", 
+
+                and: "Và",
+                or: "Hoặc"
+            },
+            operators: {
+                string: {
+                    contains: "Chứa"
+                },
+                number: {
+                    eq: "Bằng"
+                },
+                date: {
+                    eq: "Đúng ngày"
+                }
+            }
+        },
         groupable: {
             messages: {
                 empty: "Kéo thả tên cột vào đây để xem theo nhóm."
@@ -320,8 +349,8 @@ $(document).ready(function () {
             { field: "Description", title: "Mô tả", width: 200 },
             { field: "ReceiverName", title: "Người nhận" },
             { field: "ReceiverPhone", title: "SĐT nhận", width: 100 },
-            { field: "SenderName", title: "Người gửi", hidden: true },
-            { field: "SenderPhone", title: "SĐT gửi", width: 100, hidden: true },
+            { field: "SenderName", title: "Người gửi" },
+            { field: "SenderPhone", title: "SĐT gửi", width: 100 },
             { field: "DeliveryAddress", title: "Địa chỉ giao hàng", width: 200 },
             { field: "Note", title: "Ghi chú" },
             {
@@ -333,6 +362,17 @@ $(document).ready(function () {
                 editor: tripDepartureTimeDropDownEditor,
                 template: "#= getTripDepartureTimeName(TripDepartureTime) #",
                 title: "Chuyến", width: 80
+            },
+            {
+                field: "Fee", title: "Phí",
+                format: '{0:##,#}',
+                editor: feeEditor,
+                width: 120
+            },
+            {
+                field: "Payed", title: "Đã trả",
+                template: '<input type="checkbox" #= Payed ? "checked=checked" : "" # disabled="disabled" ></input>',
+                width: 80
             },
             { command: [{ name: "destroy", title: "&nbsp;", width: 70, text: "Xóa" }] }
         ],
@@ -397,6 +437,15 @@ function tripDepartureTimeDropDownEditor(container, options) {
                     }
                 }
             }
+        });
+}
+
+function feeEditor(container, options) {
+    $('<input data-bind="value:Fee"/>')
+        .appendTo(container)
+        .kendoNumericTextBox({
+            format: '##,#',
+            step: 1000
         });
 }
 
