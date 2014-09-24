@@ -257,7 +257,12 @@ $(document).ready(function () {
                     };
                 } else {
                     return {
-                        models: kendo.stringify(options)
+                        models: kendo.stringify(options),
+                        fromDate: kendo.toString(from.value(), "yyyy/MM/dd"),
+                        toDate: kendo.toString(to.value(), "yyyy/MM/dd"),
+                        fromTime: $("#fromTime").val(),
+                        toTime: $("#toTime").val(),
+                        TripName: $("#TripName").val()
                     };
                     //return {
                     //    fromDate: kendo.toString(from.value(), "yyyy/MM/dd"),
