@@ -30,8 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Kendo.DynamicLinq">
+      <HintPath>..\packages\Kendo.DynamicLinq.1.1.2.0\lib\net40\Kendo.DynamicLinq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Linq.Dynamic">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.0\lib\net40\System.Linq.Dynamic.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,7 +50,11 @@
     <Compile Include="Models\TransportingObject.cs" />
     <Compile Include="Models\Trip.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchModels\FilterModel.cs" />
     <Compile Include="SearchModels\ItemSearchModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

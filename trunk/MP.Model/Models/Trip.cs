@@ -26,11 +26,12 @@ namespace MP.Model.Models
 
     public enum DepartureTime
     {
-        C300 = 300, 
-        C530 = 530, 
+        C300 = 300,
+        C530 = 530,
         C700 = 700, 
+        C730 = 730, 
         C830 = 830, 
-        C900 = 900, 
+        C930 = 930, 
         C1030 = 1030, 
         C1130 = 1130, 
         C1230 = 1230, 
