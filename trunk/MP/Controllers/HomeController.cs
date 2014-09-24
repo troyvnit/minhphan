@@ -129,9 +129,14 @@ namespace MP.Controllers
                 return Json(passengerModel, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetItem(string models)
+        public ActionResult GetItem(string models, ItemSearchModel searchModel)
         {
             var parameter = JsonConvert.DeserializeObject<ItemSearchModel>(models);
+            parameter.fromDate = searchModel.fromDate;
+            parameter.toDate = searchModel.toDate;
+            parameter.fromTime = searchModel.fromTime;
+            parameter.toTime = searchModel.toTime;
+            parameter.TripName = searchModel.TripName;
             var result = itemService.GetItems(parameter);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
