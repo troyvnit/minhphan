@@ -91,8 +91,8 @@ namespace MP.Controllers
                  {
                      new {Text = "3:00", Value = DepartureTime.C300.ToString()},
                      new {Text = "5:30", Value = DepartureTime.C530.ToString()},
-                     new {Text = "7:00", Value = DepartureTime.C700.ToString()},
-                     new {Text = "9:00", Value = DepartureTime.C900.ToString()},
+                     new {Text = "7:30", Value = DepartureTime.C730.ToString()},
+                     new {Text = "9:30", Value = DepartureTime.C930.ToString()},
                      new {Text = "11:30", Value = DepartureTime.C1130.ToString()},
                      new {Text = "13:30", Value = DepartureTime.C1330.ToString()},
                      new {Text = "15:00", Value = DepartureTime.C1500.ToString()}
@@ -129,11 +129,11 @@ namespace MP.Controllers
                 return Json(passengerModel, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetItem(ItemSearchModel parameter)
+        public ActionResult GetItem(string models)
         {
-            var total = 0;
-            var items = itemService.GetItems(parameter, ref total).Select(Mapper.Map<Item, ItemModel>);
-            return Json(new {data = items, total}, JsonRequestBehavior.AllowGet);
+            var parameter = JsonConvert.DeserializeObject<ItemSearchModel>(models);
+            var result = itemService.GetItems(parameter);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

@@ -257,15 +257,18 @@ $(document).ready(function () {
                     };
                 } else {
                     return {
-                        fromDate: kendo.toString(from.value(), "yyyy/MM/dd"),
-                        toDate: kendo.toString(to.value(), "yyyy/MM/dd"),
-                        fromTime: $("#fromTime").val(),
-                        toTime: $("#toTime").val(),
-                        TripName: $("#TripName").val(),
-                        skip: options.skip,
-                        take: options.take,
-                        filter: options.filter ? kendo.stringify(options.filter.filters) : ""
+                        models: kendo.stringify(options)
                     };
+                    //return {
+                    //    fromDate: kendo.toString(from.value(), "yyyy/MM/dd"),
+                    //    toDate: kendo.toString(to.value(), "yyyy/MM/dd"),
+                    //    fromTime: $("#fromTime").val(),
+                    //    toTime: $("#toTime").val(),
+                    //    TripName: $("#TripName").val(),
+                    //    skip: options.skip,
+                    //    take: options.take,
+                    //    filter: options.filter ? kendo.stringify(options.filter) : ""
+                    //};
                 }
             }
         },
@@ -292,8 +295,8 @@ $(document).ready(function () {
                     Payed: { type: "boolean" }
                 }
             },
-            total: "total",
-            data: "data"
+            total: "Total",
+            data: "Data"
         }
     });
     
@@ -331,7 +334,6 @@ $(document).ready(function () {
                 empty: "Kéo thả tên cột vào đây để xem theo nhóm."
             }
         },
-        height: 500,
         toolbar: [{ name: "create", text: "Thêm" }, { name: "save", text: "Lưu" }, { name: "cancel", text: "Hủy" }],
         edit: function(e) {
             if (e.model.isNew()) {
@@ -347,12 +349,23 @@ $(document).ready(function () {
             { field: "Id", title: "Id", width: 50, hidden: true },
             { field: "ItemCode", title: "Mã", width: 50 },
             { field: "Description", title: "Mô tả", width: 200 },
-            { field: "ReceiverName", title: "Người nhận" },
+            { field: "ReceiverName", title: "Người nhận", width: 100 },
             { field: "ReceiverPhone", title: "SĐT nhận", width: 100 },
-            { field: "SenderName", title: "Người gửi" },
+            { field: "SenderName", title: "Người gửi", width: 100 },
             { field: "SenderPhone", title: "SĐT gửi", width: 100 },
-            { field: "DeliveryAddress", title: "Địa chỉ giao hàng", width: 200 },
-            { field: "Note", title: "Ghi chú" },
+            { field: "DeliveryAddress", title: "Địa chỉ giao hàng", width: 100 },
+            { field: "Note", title: "Ghi chú", width: 100, hidden: true },
+            {
+                field: "Fee", title: "Phí",
+                format: '{0:##,#}',
+                editor: feeEditor,
+                width: 50
+            },
+            {
+                field: "Payed", title: "Đã trả",
+                template: '<input type="checkbox" #= Payed ? "checked=checked" : "" # disabled="disabled" ></input>',
+                width: 80
+            },
             {
                 field: "TripDepartureDate", format: '{0:dd/MM/yyyy}',
                 title: "Ngày", width: 120
@@ -363,18 +376,7 @@ $(document).ready(function () {
                 template: "#= getTripDepartureTimeName(TripDepartureTime) #",
                 title: "Chuyến", width: 80
             },
-            {
-                field: "Fee", title: "Phí",
-                format: '{0:##,#}',
-                editor: feeEditor,
-                width: 120
-            },
-            {
-                field: "Payed", title: "Đã trả",
-                template: '<input type="checkbox" #= Payed ? "checked=checked" : "" # disabled="disabled" ></input>',
-                width: 80
-            },
-            { command: [{ name: "destroy", title: "&nbsp;", width: 70, text: "Xóa" }] }
+            { command: [{ name: "destroy", title: "&nbsp;", text: "" }], width: 70 }
         ],
         editable: true,
         saveChanges: function (event) {
