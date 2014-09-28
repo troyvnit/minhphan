@@ -97,3 +97,8 @@ input[type="checkbox"].input-validation-error {
 .full-width {
     width: 100%;
 }
+.sum-header {
+    padding: 10px;
+    float: right; 
+    margin: 0 10px;
+}

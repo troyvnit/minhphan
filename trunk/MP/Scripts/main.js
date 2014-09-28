@@ -11,7 +11,7 @@ $(document).ready(function () {
         }
     });
     var datepicker = $("#departureDateDatePicker").data("kendoDatePicker");
-    $("#today").on('click', function() {
+    $("#today").on('click', function () {
         datepicker.value(new Date());
         datepicker.trigger('change');
     });
@@ -37,7 +37,7 @@ $(document).ready(function () {
         $('#Phone').val(e.relatedTarget.dataset.phone);
         $('#TicketQuantity').val(e.relatedTarget.dataset.ticketQuantity != undefined ? e.relatedTarget.dataset.ticketQuantity : 1);
         $('#Town option').removeAttr("selected");
-        $('#Town option[value=' + e.relatedTarget.dataset.town + ']').attr("selected","");
+        $('#Town option[value=' + e.relatedTarget.dataset.town + ']').attr("selected", "");
         $('#Note').val(e.relatedTarget.dataset.note);
         $('#DepartureDate').attr("disabled", "");
         $('#DepartureTime').attr("disabled", "");
@@ -129,11 +129,11 @@ $(document).ready(function () {
                     read: "/Home/GetPassenger",
                     type: "POST",
                     parameterMap: function (options, operation) {
-                            return {
-                                DepartureDate: kendo.toString(datepicker.value(), "yyyy/MM/dd"),
-                                DepartureTime: $("#DepartureTime").val(),
-                                TripName: $("#TripName").val()
-                            };
+                        return {
+                            DepartureDate: kendo.toString(datepicker.value(), "yyyy/MM/dd"),
+                            DepartureTime: $("#DepartureTime").val(),
+                            TripName: $("#TripName").val()
+                        };
                     }
                 }
             },
@@ -166,16 +166,16 @@ $(document).ready(function () {
     $("#selectTown").multiselect({
         includeSelectAllOption: true
     });
-    $("#filterTown").on('click', function() {
+    $("#filterTown").on('click', function () {
         var dataSource = $("#passengerGrid").data("kendoGrid").dataSource;
         dataSource.filter({
             "field": "Town",
-            "operator": function(item) {
+            "operator": function (item) {
                 var items = $("#selectTown").val();
                 console.log($.inArray(item, items));
                 return $.inArray(item, items) != -1;
             }
-    });
+        });
     });
     function startChange() {
         var startDate = from.value(),
@@ -225,6 +225,8 @@ $(document).ready(function () {
 
     from.max(to.value());
     to.min(from.value());
+
+    var noPaging = false;
     var itemDataSource = new kendo.data.DataSource({
         sync: function () {
             $("#itemGrid .k-update").bind("click");
@@ -262,7 +264,8 @@ $(document).ready(function () {
                         toDate: kendo.toString(to.value(), "yyyy/MM/dd"),
                         fromTime: $("#fromTime").val(),
                         toTime: $("#toTime").val(),
-                        TripName: $("#TripName").val()
+                        TripName: $("#TripName").val(),
+                        noPaging: noPaging
                     };
                     //return {
                     //    fromDate: kendo.toString(from.value(), "yyyy/MM/dd"),
@@ -281,6 +284,7 @@ $(document).ready(function () {
         pageSize: 10,
         serverPaging: true,
         serverFiltering: true,
+        serverAggregates: true,
         schema: {
             model: {
                 id: "Id",
@@ -301,10 +305,16 @@ $(document).ready(function () {
                 }
             },
             total: "Total",
-            data: "Data"
-        }
+            data: "Data",
+            aggregates: "Aggregates"
+        },
+        aggregate: [
+          { field: "All", aggregate: "sum" },
+          { field: "Paid", aggregate: "sum" },
+          { field: "Unpaid", aggregate: "sum" }
+        ]
     });
-    
+
     $("#itemGrid").kendoGrid({
         dataSource: itemDataSource,
         navigatable: true,
@@ -312,12 +322,12 @@ $(document).ready(function () {
         filterable: {
             extra: false,
             messages: {
-                info: "Lọc theo tiêu chí:", 
+                info: "Lọc theo tiêu chí:",
                 filter: "Lọc",
-                clear: "Xóa", 
+                clear: "Xóa",
 
-                isTrue: "Rồi", 
-                isFalse: "Chưa", 
+                isTrue: "Rồi",
+                isFalse: "Chưa",
 
                 and: "Và",
                 or: "Hoặc"
@@ -340,7 +350,7 @@ $(document).ready(function () {
             }
         },
         toolbar: [{ name: "create", text: "Thêm" }, { name: "save", text: "Lưu" }, { name: "cancel", text: "Hủy" }],
-        edit: function(e) {
+        edit: function (e) {
             if (e.model.isNew()) {
                 if (e.model.TripDepartureDate == "") {
                     e.model.set("TripDepartureDate", kendo.toString(datepicker.value(), "dd/MM/yyyy"));
@@ -387,6 +397,30 @@ $(document).ready(function () {
         saveChanges: function (event) {
             $("#itemGrid .k-update").unbind("click");
             loading();
+        },
+        dataBound: function (event) {
+            var aggregates = $("#itemGrid").data("kendoGrid").dataSource.aggregates();
+            var all = aggregates.All.sum;
+            var paid = aggregates.Paid.sum;
+            var unpaid = aggregates.Unpaid.sum;
+            $("#itemGrid .k-grid-footer").remove();
+            $("#itemGrid .k-grid-toolbar .sum-header").remove();
+            $("#itemGrid .k-grid-toolbar").append('<span class="alert alert-success sum-header" style=""><strong>Tổng tiền:</strong> ' + all + '000</span>');
+            $("#itemGrid .k-grid-toolbar").append('<span class="alert alert-info sum-header" style=""><strong>Đã trả:</strong> ' + paid + '000</span>');
+            $("#itemGrid .k-grid-toolbar").append('<span class="alert alert-warning sum-header" style=""><strong>Chưa trả:</strong> ' + unpaid + '000</span>');
+            $('#itemGridExportButton').remove();
+            var fileName = 'Báo Cáo ' + $("#TripName").val() + ' ' + kendo.toString(from.value(), "yyyy/MM/dd") + ' ' + kendo.toString(to.value(), "yyyy/MM/dd") + ' '
+                + $("#fromTime").val() + ' ' + $("#toTime").val();
+            $('#showNoPaging').parent().append('<a download="' + fileName + '.xls" class="btn btn-success" href="#" id="itemGridExportButton">Xuất Excel</a>');
+            $('#itemGridExportButton').on('click', function () {
+                ExcellentExport.excelFromData(this, toTable("itemGrid"), 'Sheet 1');
+            });
+            if (noPaging) {
+                $("#itemGrid .k-grid-pager").hide();
+            } else {
+                $("#itemGrid .k-grid-pager").show();
+            }
+            noPaging = false;
         }
     });
     $("#fromTime").on('change', function () {
@@ -403,6 +437,10 @@ $(document).ready(function () {
         $("#itemGrid").data("kendoGrid").dataSource.read();
     });
     $("#showAllItems").trigger('click');
+    $("#showNoPaging").on('click', function () {
+        noPaging = true;
+        $("#itemGrid").data("kendoGrid").dataSource.read();
+    });
     $("#tripContentForm").validate({
         rules: {
             Phone: "required",
@@ -482,7 +520,7 @@ function printScreen() {
             //doc.save('SM_' + kendo.toString($("#departureDateDatePicker").data("kendoDatePicker").value(), "dd_MM_yyyy") + '_' + $("#DepartureTime").val().replace(':', '_') + '.pdf');
         }
     });
-} 
+}
 function printScreenPassengerList() {
     $('#passengerListModal').modal("hide");
     html2canvas($("#passengerGrid"), {
@@ -517,5 +555,60 @@ var loading = function () {
             $('#overlay').remove();
         }
     });
+};
+
+var toTable = function (gridId) {
+    var table = '<table><tr>';
+
+    // Get access to basic grid data
+    var grid = $("#" + gridId).data("kendoGrid"),
+        datasource = grid.dataSource;
+
+    // Increase page size to cover all the data and get a reference to that data
+    //datasource.pageSize(datasource.total());
+    var data = datasource.view();
+
+    //add the header row
+    for (var i = 0; i < grid.columns.length; i++) {
+        var title = grid.columns[i].title,
+            field = grid.columns[i].field,
+            hidden = grid.columns[i].hidden;
+        if (typeof (field) === "undefined" || hidden) { continue; /* no data! */ }
+        if (typeof (title) === "undefined") {
+            title = field;
+        }
+
+        table += '<th>' + title + '</th>';
+    }
+    table += "</tr>";
+
+    //add each row of data
+    for (var row in data) {
+        var tr = grid.content.find('tr[role=row]') != undefined ? grid.content.find('tr[role=row]')[row] : undefined;
+        console.log(tr);
+        if (tr != undefined) {
+            table += "<tr>";
+            for (var i = 0; i < grid.columns.length; i++) {
+                var fieldName = grid.columns[i].field;
+
+                if (typeof (fieldName) === "undefined" || grid.columns[i].hidden) { continue; }
+                var td = tr.cells != undefined ? tr.cells[i] : undefined;
+
+                var text = td != undefined ? fieldName == "Payed" ? td.innerHTML.indexOf('checked') > -1 ? 'Rồi' : 'Chưa' : td.innerText : undefined;
+                var value = text;
+
+                if (!value) {
+                    value = "";
+                } else {
+                    value = value.toString();
+                }
+
+                table += '<td>' + value + '</td>';
+            }
+            table += "</tr>";
+        }
+    }
+
+    return table;
 };
 

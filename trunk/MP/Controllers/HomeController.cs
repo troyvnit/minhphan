@@ -137,6 +137,7 @@ namespace MP.Controllers
             parameter.fromTime = searchModel.fromTime;
             parameter.toTime = searchModel.toTime;
             parameter.TripName = searchModel.TripName;
+            parameter.noPaging = searchModel.noPaging;
             var result = itemService.GetItems(parameter);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -155,7 +156,7 @@ namespace MP.Controllers
                 itemModel.Id = item.Id;
                 itemModel.TripDepartureTime = item.Trip.DepartureTime.ToString();
             }
-            return Json(new { data = items }, JsonRequestBehavior.AllowGet);
+            return Json(new { Data = items }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
