@@ -21,6 +21,7 @@ namespace MP
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/bootstrap-multiselect.js",
                       "~/Scripts/kendo.all.min.js",
+                      "~/Scripts/excellentexport.js",
                       "~/Scripts/respond.js",
                       "~/Scripts/main.js"));
 

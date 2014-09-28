@@ -145,6 +145,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Mappers\AutoMapperConfiguration.cs" />
+    <Compile Include="Models\GroupModel.cs" />
     <Compile Include="Models\ItemModel.cs" />
     <Compile Include="Models\PassengerModel.cs" />
     <Compile Include="Models\TransportingObjectModel.cs" />
@@ -172,6 +173,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <None Include="Properties\PublishProfiles\MP.pubxml" />
     <None Include="Scripts\jquery-2.1.0-vsdoc.js" />
+    <Content Include="Scripts\excellentexport.js" />
     <Content Include="Scripts\FileSaver.min.js" />
     <Content Include="Scripts\html2canvas.js" />
     <Content Include="Scripts\jqBootstrapValidation.js" />

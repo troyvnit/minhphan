@@ -12,6 +12,7 @@ namespace MP.Model.SearchModels
         public TripName TripName { get; set; }
         public int skip { get; set; }
         public int take { get; set; }
+        public bool noPaging { get; set; }
         public Kendo.DynamicLinq.Filter filter { get; set; }
     }
 }

@@ -42,17 +42,34 @@ namespace MP.Data.Service
 
         public DataSourceResult GetItems(ItemSearchModel parameter)
         {
-            var items = itemRepository.GetMany(a => (a.Trip.DepartureDate >= parameter.fromDate || parameter.fromDate == DateTime.MinValue)
+            var queryable = itemRepository.GetMany(a => (a.Trip.DepartureDate >= parameter.fromDate || parameter.fromDate == DateTime.MinValue)
                 && (a.Trip.DepartureDate <= parameter.toDate || parameter.toDate == DateTime.MinValue)
                 && (a.Trip.DepartureTime >= parameter.fromTime || parameter.fromTime == 0)
                 && (a.Trip.DepartureTime <= parameter.toTime || parameter.toTime == 0)
-                && a.Trip.TripName == parameter.TripName).OrderByDescending(a => a.Id).Select(Mapper.Map<ItemModel>).AsQueryable().ToDataSourceResult(parameter.take, parameter.skip, null, parameter.filter);
+                && a.Trip.TripName == parameter.TripName).OrderByDescending(a => a.Id);
+            var result = parameter.noPaging ? queryable.Select(Mapper.Map<ItemModel>)
+                .AsQueryable()
+                .ToDataSourceResult(queryable.Count(), 0, null, parameter.filter,
+                new List<Aggregator> {new Aggregator {Aggregate = "sum", Field = "Fee"}}) :
+                queryable.Select(Mapper.Map<ItemModel>)
+                .AsQueryable()
+                .ToDataSourceResult(parameter.take, parameter.skip, null, parameter.filter,
+                    new List<Aggregator> {new Aggregator {Aggregate = "sum", Field = "Fee"}});
+            var group =
+                queryable.GroupBy(a => a.Payed).Select(a => new GroupModel { GroupName = a.Key ? "Paid" : "Unpaid", Value = a.Sum(i => i.Fee) }).ToList();
+
+            result.Aggregates = new 
+            {
+                Paid = new { sum = group.FirstOrDefault(a => a.GroupName == "Paid") != null ? group.FirstOrDefault(a => a.GroupName == "Paid").Value : 0 },
+                Unpaid = new { sum = group.FirstOrDefault(a => a.GroupName == "Unpaid") != null ? group.FirstOrDefault(a => a.GroupName == "Unpaid").Value : 0 },
+                All = new { sum = group.Sum(a => a.Value) }
+            };
             //total = itemRepository.GetMany(a => (a.Trip.DepartureDate >= parameter.fromDate || parameter.fromDate == DateTime.MinValue)
             //    && (a.Trip.DepartureDate <= parameter.toDate || parameter.toDate == DateTime.MinValue)
             //    && (a.Trip.DepartureTime >= parameter.fromTime || parameter.fromTime == 0)
             //    && (a.Trip.DepartureTime <= parameter.toTime || parameter.toTime == 0)
             //    && a.Trip.TripName == parameter.TripName).Count();
-            return items;
+            return result;
         }
 
         public bool AddOrUpdateItem(Item item)
