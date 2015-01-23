@@ -101,11 +101,12 @@ namespace MP.Controllers
                  {
                      new {Text = "7:00", Value = DepartureTime.C700.ToString()},
                      new {Text = "8:30", Value = DepartureTime.C830.ToString()},
-                     new {Text = "10:30", Value = DepartureTime.C1030.ToString()},
-                     new {Text = "12:30", Value = DepartureTime.C1230.ToString()},
-                     new {Text = "14:00", Value = DepartureTime.C1400.ToString()},
-                     new {Text = "15:30", Value = DepartureTime.C1530.ToString()},
-                     new {Text = "17:00", Value = DepartureTime.C1700.ToString()}
+                     new {Text = "10:00", Value = DepartureTime.C1000.ToString()},
+                     new {Text = "11:30", Value = DepartureTime.C1130.ToString()},
+                     new {Text = "13:00", Value = DepartureTime.C1300.ToString()},
+                     new {Text = "14:30", Value = DepartureTime.C1430.ToString()},
+                     new {Text = "16:00", Value = DepartureTime.C1600.ToString()},
+                     new {Text = "17:30", Value = DepartureTime.C1730.ToString()}
                  };
             return Json(tripName == TripName.MA ? maList : sgList, JsonRequestBehavior.AllowGet);
         }
