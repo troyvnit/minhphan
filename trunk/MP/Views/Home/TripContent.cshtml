@@ -18,11 +18,17 @@
                  {
                      new {Text = "7:00", Value = DepartureTime.C700},
                      new {Text = "8:30", Value = DepartureTime.C830},
+                     new {Text = "10:00", Value = DepartureTime.C1000},
                      new {Text = "10:30", Value = DepartureTime.C1030},
+                     new {Text = "11:30", Value = DepartureTime.C1130},
                      new {Text = "12:30", Value = DepartureTime.C1230},
+                     new {Text = "13:00", Value = DepartureTime.C1230},
                      new {Text = "14:00", Value = DepartureTime.C1400},
+                     new {Text = "14:00", Value = DepartureTime.C1430},
                      new {Text = "15:30", Value = DepartureTime.C1530},
-                     new {Text = "17:00", Value = DepartureTime.C1700}
+                     new {Text = "16:00", Value = DepartureTime.C1600},
+                     new {Text = "17:00", Value = DepartureTime.C1700},
+                     new {Text = "17:30", Value = DepartureTime.C1730}
                  };
     var sgSelectList = new SelectList(sgList, "Value", "Text");
     var townList = new List<object>
