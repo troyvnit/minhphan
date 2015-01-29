@@ -32,7 +32,7 @@ namespace MP.Data.Service
         public Trip AddOrUpdateTripFollowDepartureInfo(Trip trip)
         {
             var existedTrip = tripRepository.GetMany(
-                a => a.DepartureDate == trip.DepartureDate && a.DepartureTime == trip.DepartureTime).FirstOrDefault();
+                a => a.DepartureDate == trip.DepartureDate && a.DepartureTime == trip.DepartureTime && a.TripName == trip.TripName).FirstOrDefault();
             if (existedTrip != null)
             {
                 existedTrip.Description = trip.Description;
